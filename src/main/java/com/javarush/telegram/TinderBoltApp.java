@@ -8,8 +8,9 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
+import com.javarush.telegram.*;
 import java.util.ArrayList;
+
 
 public class TinderBoltApp extends MultiSessionTelegramBot {
     public static final String TELEGRAM_BOT_NAME = "pandaTinder_bot"; //TODO: добавь имя бота в кавычках
@@ -23,6 +24,9 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
     private ChatGPTService chatGPT = new ChatGPTService(OPEN_AI_TOKEN);
     private DialogMode currentMode = null;
     private ArrayList<String> list = new ArrayList<>();
+
+    private UserInfo me;
+    private int questionCount;
 
     @Override
     public void onUpdateEventReceived(Update update) {
@@ -116,6 +120,57 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
 
             list.add(message);
+            return;
+        }
+
+        // command PROFILE
+        if (message.equals("/profile")){
+            currentMode = DialogMode.PROFILE;
+            sendPhotoMessage("profile");
+
+            me = new UserInfo();
+            questionCount = 1;
+            sendTextMessage("Сколько вам лет?");
+
+            return;
+        }
+
+        if (currentMode == DialogMode.PROFILE) {
+            switch (questionCount) {
+                case 1:
+                    me.age = message;
+                    questionCount = 2;
+                    sendTextMessage("Кем вы работаете?");
+                    return;
+
+                case 2:
+                    me.occupation = message;
+                    questionCount = 3;
+                    sendTextMessage("У вас есть хобби?");
+                    return;
+
+                case 3:
+                    me.hobby = message;
+                    questionCount = 4;
+                    sendTextMessage("Что вам не нравится в людях?");
+                    return;
+                case 4:
+                    me.annoys = message;
+                    questionCount = 5;
+                    sendTextMessage("Цели знакомства?");
+                    return;
+                case 5:
+                    me.goals = message;
+
+                    String aboutMySelf = me.toString();
+                    String prompt = loadPrompt("profile");
+
+                    Message msg = sendTextMessage("Подождите, chatGPT думает...");
+                    String answer = chatGPT.sendMessage(prompt, aboutMySelf);
+                    updateTextMessage(msg, answer);
+                    return;
+            }
+
             return;
         }
 
