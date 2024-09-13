@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 
 public class TinderBoltApp extends MultiSessionTelegramBot {
-    public static final String TELEGRAM_BOT_NAME = "pandaTinder_bot"; //TODO: добавь имя бота в кавычках
-    public static final String TELEGRAM_BOT_TOKEN = "7512853353:AAGYsy7Y441_4KWG3puy8kY7io-gmqPpeSQ"; //TODO: добавь токен бота в кавычках
-    public static final String OPEN_AI_TOKEN = "gpt:GMEpATyDssZWFB4H2wdsJFkblB3TtbsOsfleLvmgKt8qL2qt"; //TODO: добавь токен ChatGPT в кавычках
+    public static final String TELEGRAM_BOT_NAME = ""; //TODO: добавь имя бота в кавычках
+    public static final String TELEGRAM_BOT_TOKEN = ""; //TODO: добавь токен бота в кавычках
+    public static final String OPEN_AI_TOKEN = ""; //TODO: добавь токен ChatGPT в кавычках
 
     public TinderBoltApp() {
         super(TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN);
